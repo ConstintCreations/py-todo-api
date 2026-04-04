@@ -22,8 +22,22 @@ def save_tasks(tasks):
 
 
 @app.get("/tasks")
-async def get_tasks():
-    return load_tasks()
+async def get_tasks(done: bool | None = None):
+    tasks = load_tasks()
+    if done != None:
+        if done:
+            done_tasks = []
+            for task in tasks:
+                if task["done"] == True:
+                    done_tasks.append(task)
+            return done_tasks
+        else:
+            not_done_tasks = []
+            for task in tasks:
+                if task["done"] == False:
+                    not_done_tasks.append(task)
+            return not_done_tasks
+    return tasks
 
 @app.post("/tasks")
 async def add_task(task_body: TaskBody):
@@ -44,5 +58,14 @@ async def complete_task(task_id: int):
             task["done"] = True
             save_tasks(tasks)
             return task
-            
+    raise HTTPException(status_code=404, detail="Task not found")
+
+@app.delete("/tasks/{task_id}")
+async def delete_task(task_id: int):
+    tasks = load_tasks()
+    for task in tasks:
+        if (task["id"] == task_id):
+            tasks.remove(task)
+            save_tasks(tasks)
+            return f"Task at id {task_id} was deleted"
     raise HTTPException(status_code=404, detail="Task not found")
