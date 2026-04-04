@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import os
 import json
@@ -23,7 +23,7 @@ def save_tasks(tasks):
 
 @app.get("/tasks")
 async def get_tasks():
-    return load_tasks
+    return load_tasks()
 
 @app.post("/tasks")
 async def add_task(task_body: TaskBody):
@@ -35,3 +35,14 @@ async def add_task(task_body: TaskBody):
     tasks.append({"id": new_id, "task": task_body.task, "done": False})
     save_tasks(tasks)
     return tasks[-1]
+
+@app.patch("/tasks/{task_id}/complete")
+async def complete_task(task_id: int):
+    tasks = load_tasks()
+    for task in tasks:
+        if (task["id"] == task_id):
+            task["done"] = True
+            save_tasks(tasks)
+            return task
+            
+    raise HTTPException(status_code=404, detail="Task not found")
