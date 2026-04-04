@@ -10,6 +10,9 @@ TASKS_FILE = "tasks.json"
 class TaskBody(BaseModel):
     task: str
 
+class Query(BaseModel):
+    query_text: str
+
 def load_tasks():
     if not os.path.exists(TASKS_FILE):
         return []
@@ -69,3 +72,14 @@ async def delete_task(task_id: int):
             save_tasks(tasks)
             return f"Task at id {task_id} was deleted"
     raise HTTPException(status_code=404, detail="Task not found")
+
+@app.post("/tasks/search")
+async def search_tasks(query: Query):
+    tasks = load_tasks()
+    found_tasks = []
+    for task in tasks:
+        if query.query_text.lower() in task["task"].lower():
+            found_tasks.append(task)
+    if len(found_tasks) > 0:
+        return found_tasks
+    raise HTTPException(status_code=404, detail="No matching tasks found")
