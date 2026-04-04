@@ -19,7 +19,7 @@ pip install -i https://test.pypi.org/simple/ Constint_RP3_Todo_API
 
 Tasks can be listed with "/tasks" and optionally take in a done parameter to show only done tasks or only not done tasks
 
-## Add Tasks (POSTS /tasks)
+## Add Tasks (POST /tasks)
 
 Tasks can be added with "/tasks" and take a request body of 
 
