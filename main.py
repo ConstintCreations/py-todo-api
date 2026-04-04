@@ -63,6 +63,23 @@ async def complete_task(task_id: int):
             return task
     raise HTTPException(status_code=404, detail="Task not found")
 
+@app.delete("/tasks/clear")
+async def clear_tasks(done: bool | None = None):
+    new_tasks = []
+    if done != None:
+        tasks = load_tasks()
+        if done:
+            for task in tasks:
+                if task["done"] == False:
+                    new_tasks.append(task)
+        else:
+            for task in tasks:
+                if task["done"] == True:
+                    new_tasks.append(task)
+
+    save_tasks(new_tasks)
+    return new_tasks
+
 @app.delete("/tasks/{task_id}")
 async def delete_task(task_id: int):
     tasks = load_tasks()
