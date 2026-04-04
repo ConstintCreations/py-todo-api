@@ -19,3 +19,19 @@ def load_tasks():
 def save_tasks(tasks):
     with open(TASKS_FILE, "w") as file:
         json.dump(tasks, file, indent=4)
+
+
+@app.get("/tasks")
+async def get_tasks():
+    return load_tasks
+
+@app.post("/tasks")
+async def add_task(task_body: TaskBody):
+    tasks = load_tasks()
+    if len(tasks) == 0:
+        new_id = 1
+    else:
+        new_id = tasks[-1]["id"] + 1
+    tasks.append({"id": new_id, "task": task_body.task, "done": False})
+    save_tasks(tasks)
+    return tasks[-1]
