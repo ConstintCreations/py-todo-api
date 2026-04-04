@@ -1,0 +1,11 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "Constint_RP3_Todo_API"
+version = "0.0.1"
+dependencies = [ "fastapi[standard]" ]
+
+[project.scripts]
+todo-api = "Constint_RP3_Todo_API.main:main"

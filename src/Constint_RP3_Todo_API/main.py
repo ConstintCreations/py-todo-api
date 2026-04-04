@@ -90,7 +90,7 @@ async def delete_task(task_id: int):
             return f"Task at id {task_id} was deleted"
     raise HTTPException(status_code=404, detail="Task not found")
 
-@app.post("/tasks/search")
+@app.get("/tasks/search")
 async def search_tasks(query: Query):
     tasks = load_tasks()
     found_tasks = []
@@ -100,3 +100,10 @@ async def search_tasks(query: Query):
     if len(found_tasks) > 0:
         return found_tasks
     raise HTTPException(status_code=404, detail="No matching tasks found")
+
+def main():
+    import uvicorn
+    uvicorn.run("Constint_RP3_Todo_API.main:app", host="127.0.0.1", port="8000")
+
+if __name__ == "__main__":
+    main()
