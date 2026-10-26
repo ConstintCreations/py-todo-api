@@ -13,6 +13,8 @@ To install, you can use
 pip install -i https://test.pypi.org/simple/ Constint_RP3_Todo_API
 ```
 
+Run with: `todo-api`
+
 # Documentation
 
 ## List Tasks (GET /tasks)
